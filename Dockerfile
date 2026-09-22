@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION=3.11
 
-FROM python:$PYTHON_VERSION-slim
+FROM python:${PYTHON_VERSION}-slim
 
 ARG PYTHON_VERSION
 
@@ -13,4 +13,8 @@ WORKDIR /app
 RUN python -m venv /opt/venv && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip
 
-CMD ["python", "--version"]
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "--version"] 
