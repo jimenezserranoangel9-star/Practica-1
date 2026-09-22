@@ -1,4 +1,3 @@
-# src/app.py
 import flet as ft
 from lenguajes import (
     obtener_prefijos, obtener_sufijos, obtener_subcadenas,
@@ -11,36 +10,34 @@ def main(page: ft.Page):
     page.padding = 15
     page.scroll = ft.ScrollMode.AUTO
 
-    # --- COLUMNA IZQUIERDA: ENTRADAS EXACTAS DEL PROFE ---
+    # Entradas Izquierda
     txt_alfabeto = ft.TextField(label="Ingrese el alfabeto separado por comas (ej: a,b,c)", value="a,b,c", width=340, dense=True)
     txt_nmax = ft.TextField(label="Ingrese el número máximo de combinaciones", value="3", width=340, dense=True)
     txt_l1 = ft.TextField(label="Ingrese las cadenas del primer lenguaje separadas por comas", value="ba,aaaaaaaaa,baa,b,ccc,aa", width=340, dense=True)
     txt_l2 = ft.TextField(label="Ingrese las cadenas del segundo lenguaje separadas por comas", value="aa,bababa,aaa,baaa,ccc,aaaaababa,bbbbbb", width=340, dense=True)
     txt_pot_l = ft.TextField(label="Ingrese la potencia del lenguaje", value="3", width=340, dense=True)
 
-    # --- COLUMNA DERECHA: AUTÓMATA Y MATRIZ DE TRANSICIONES ---
+    # Autómata Derecha
     txt_estados = ft.TextField(label="Ingrese los estados separados por comas (ej: 0,1,2)", value="0,1,2,3,4,5", width=340, dense=True)
     txt_est_init = ft.TextField(label="Ingrese el estado inicial", value="0", width=340, dense=True)
     txt_est_acept = ft.TextField(label="Ingrese los estados de aceptación separados por comas (ej: 2,3)", value="4", width=340, dense=True)
 
-    # Cajas de la matriz de transiciones (Valores corregidos para aceptación)
-    t0_a = ft.TextField(label="0: a ->", value="1", width=95, dense=True)
+    # Transiciones
+    t0_a = ft.TextField(label="0: a ->", value="5", width=95, dense=True)
     t0_b = ft.TextField(label="0: b ->", value="2", width=95, dense=True)
     t0_c = ft.TextField(label="0: c ->", value="5", width=95, dense=True)
 
-    t4_a = ft.TextField(label="4: a ->", value="4", width=95, dense=True)
+    t4_a = ft.TextField(label="4: a ->", value="5", width=95, dense=True)
     t4_b = ft.TextField(label="4: b ->", value="5", width=95, dense=True)
     t4_c = ft.TextField(label="4: c ->", value="5", width=95, dense=True)
 
     t5_a = ft.TextField(label="5: a ->", value="5", width=95, dense=True)
     t5_b = ft.TextField(label="5: b ->", value="5", width=95, dense=True)
     t5_c = ft.TextField(label="5: c ->", value="5", width=95, dense=True)
-    txt_cad_validar = ft.TextField(label="Ingrese la cadena a validar", value="abbbacbcbcbcba", width=340, dense=True)
 
-    # --- SALIDA ABAJO EN VERDE ---
+    txt_cad_validar = ft.TextField(label="Ingrese la cadena a validar", value="abbbacbcbcbcba", width=340, dense=True)
     txt_resultado = ft.Text(value="", size=13, color="greenAccent", selectable=True)
 
-    # --- FUNCIONES DE BOTONES ---
     def op_kleene(e):
         alf = {x.strip() for x in txt_alfabeto.value.split(",") if x.strip()}
         try:
@@ -104,29 +101,22 @@ def main(page: ft.Page):
         aceptacion = {x.strip() for x in txt_est_acept.value.split(",") if x.strip()}
         cadena = txt_cad_validar.value.strip()
 
-        # Transiciones dinámicas desde los campos de la UI
         trans = {
             "0": {"a": t0_a.value.strip(), "b": t0_b.value.strip(), "c": t0_c.value.strip()},
             "4": {"a": t4_a.value.strip(), "b": t4_b.value.strip(), "c": t4_c.value.strip()},
             "5": {"a": t5_a.value.strip(), "b": t5_b.value.strip(), "c": t5_c.value.strip()}
         }
 
-        # Simulación simple: si lee la última 'a' de la cadena 'abbbacbcbcbcba', pasa/permanece en estado de aceptación (4)
         for sim in cadena:
             if estado_actual in trans and sim in trans[estado_actual]:
                 estado_actual = trans[estado_actual][sim]
             else:
-                # Regla de simulación para coincidir con la prueba del Anexo 1
-                if sim == 'a':
-                    estado_actual = "4"
-                else:
-                    estado_actual = "5"
+                estado_actual = "5"
 
         valida = estado_actual in aceptacion
-        txt_resultado.value = f"Validación de Cadena '{cadena}': {'ACEPTADA (Llega a estado de aceptación 4)' if valida else 'RECHAZADA (Termina en estado ' + estado_actual + ')'}"
+        txt_resultado.value = f"Validación de Cadena '{cadena}': {'ACEPTADA' if valida else 'RECHAZADA (Termina en estado ' + estado_actual + ')'}"
         page.update()
 
-    # --- BOTONES DEL CENTRO ---
     col_botones = ft.Column([
         ft.ElevatedButton("Cerradura de Kleene", on_click=op_kleene, width=200),
         ft.ElevatedButton("Clausura Positiva", on_click=op_positiva, width=200),
@@ -139,9 +129,7 @@ def main(page: ft.Page):
         ft.ElevatedButton("Definir Autómata", on_click=validar_cadena_af, width=200),
     ], spacing=6, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
-    col_izquierda = ft.Column([
-        txt_alfabeto, txt_nmax, txt_l1, txt_l2, txt_pot_l
-    ], spacing=10)
+    col_izquierda = ft.Column([txt_alfabeto, txt_nmax, txt_l1, txt_l2, txt_pot_l], spacing=10)
 
     col_derecha = ft.Column([
         txt_estados, txt_est_init, txt_est_acept,
