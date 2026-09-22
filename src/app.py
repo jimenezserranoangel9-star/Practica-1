@@ -6,41 +6,47 @@ from lenguajes import (
 )
 
 def main(page: ft.Page):
-    page.title = "Teoría de la Computación - Práctica 1"
+    page.title = "Operaciones sobre Lenguajes y Autómatas"
     page.theme_mode = ft.ThemeMode.DARK
+    page.padding = 15
     page.scroll = ft.ScrollMode.AUTO
-    page.padding = 20
 
-    def guardar_en_archivo(contenido):
-        try:
-            with open("resultados_operaciones.txt", "w", encoding="utf-8") as f:
-                f.write(contenido)
-            page.open(ft.SnackBar(ft.Text("Resultados guardados en 'resultados_operaciones.txt'")))
-        except Exception as ex:
-            page.open(ft.SnackBar(ft.Text(f"Error al guardar: {str(ex)}")))
+    # --- COLUMNA IZQUIERDA: ENTRADAS EXACTAS DEL PROFE ---
+    txt_alfabeto = ft.TextField(label="Ingrese el alfabeto separado por comas (ej: a,b,c)", value="a,b,c", width=340, dense=True)
+    txt_nmax = ft.TextField(label="Ingrese el número máximo de combinaciones", value="3", width=340, dense=True)
+    txt_l1 = ft.TextField(label="Ingrese las cadenas del primer lenguaje separadas por comas", value="ba,aaaaaaaaa,baa,b,ccc,aa", width=340, dense=True)
+    txt_l2 = ft.TextField(label="Ingrese las cadenas del segundo lenguaje separadas por comas", value="aa,bababa,aaa,baaa,ccc,aaaaababa,bbbbbb", width=340, dense=True)
+    txt_pot_l = ft.TextField(label="Ingrese la potencia del lenguaje", value="3", width=340, dense=True)
 
-    # --- CAMPOS DE ENTRADA ---
-    txt_alfabeto = ft.TextField(label="Alfabeto Σ (ej: a,b,c)", value="a,b,c", width=300)
-    txt_nmax = ft.TextField(label="Máx. Combinaciones (n)", value="3", width=300)
-    txt_cadena_ind = ft.TextField(label="Cadena Individual (w)", value="hola", width=300)
-    txt_l1 = ft.TextField(label="Lenguaje 1 (L1)", value="ba,baa,b,ccc,aa", width=300)
-    txt_l2 = ft.TextField(label="Lenguaje 2 (L2)", value="aa,aaa,baaa,ccc", width=300)
+    # --- COLUMNA DERECHA: AUTÓMATA Y MATRIZ DE TRANSICIONES ---
+    txt_estados = ft.TextField(label="Ingrese los estados separados por comas (ej: 0,1,2)", value="0,1,2,3,4,5", width=340, dense=True)
+    txt_est_init = ft.TextField(label="Ingrese el estado inicial", value="0", width=340, dense=True)
+    txt_est_acept = ft.TextField(label="Ingrese los estados de aceptación separados por comas (ej: 2,3)", value="4", width=340, dense=True)
 
-    # --- AUTÓMATA FINITO ---
-    txt_estados = ft.TextField(label="Estados (ej: 0,1,2,3,4,5)", value="0,1,2,3,4,5", width=300)
-    txt_est_init = ft.TextField(label="Estado Inicial", value="0", width=300)
-    txt_est_acept = ft.TextField(label="Estados de Aceptación", value="4", width=300)
-    txt_cad_validar = ft.TextField(label="Cadena a Validar", value="abbbacbcbcbcba", width=300)
+    # Cajas de la matriz de transiciones (tal cual la captura)
+    t0_a = ft.TextField(label="0: a ->", value="5", width=95, dense=True)
+    t0_b = ft.TextField(label="0: b ->", value="2", width=95, dense=True)
+    t0_c = ft.TextField(label="0: c ->", value="5", width=95, dense=True)
 
-    # --- SALIDA ---
-    txt_resultado = ft.Text(value="Los resultados aparecerán aquí...", size=14, selectable=True, color="greenAccent")
+    t4_a = ft.TextField(label="4: a ->", value="5", width=95, dense=True)
+    t4_b = ft.TextField(label="4: b ->", value="5", width=95, dense=True)
+    t4_c = ft.TextField(label="4: c ->", value="5", width=95, dense=True)
 
-    # --- FUNCIONES DE OPERACIONES ---
+    t5_a = ft.TextField(label="5: a ->", value="5", width=95, dense=True)
+    t5_b = ft.TextField(label="5: b ->", value="5", width=95, dense=True)
+    t5_c = ft.TextField(label="5: c ->", value="5", width=95, dense=True)
+
+    txt_cad_validar = ft.TextField(label="Ingrese la cadena a validar", value="abbbacbcbcbcba", width=340, dense=True)
+
+    # --- SALIDA ABAJO EN VERDE ---
+    txt_resultado = ft.Text(value="", size=13, color="greenAccent", selectable=True)
+
+    # --- FUNCIONES DE BOTONES ---
     def op_kleene(e):
         alf = {x.strip() for x in txt_alfabeto.value.split(",") if x.strip()}
         try:
             res = generar_cerradura_kleene(alf, int(txt_nmax.value or 0))
-            txt_resultado.value = f"Cerradura de Kleene (Σ*):\n{res}"
+            txt_resultado.value = f"Cerradura de Kleene: {res}"
         except Exception as err:
             txt_resultado.value = f"Error: {str(err)}"
         page.update()
@@ -49,107 +55,105 @@ def main(page: ft.Page):
         alf = {x.strip() for x in txt_alfabeto.value.split(",") if x.strip()}
         try:
             res = generar_cerradura_positiva(alf, int(txt_nmax.value or 0))
-            txt_resultado.value = f"Clausura Positiva (Σ+):\n{res}"
+            txt_resultado.value = f"Clausura Positiva: {res}"
         except Exception as err:
             txt_resultado.value = f"Error: {str(err)}"
-        page.update()
-
-    def op_subcadenas(e):
-        w = txt_cadena_ind.value or ""
-        txt_resultado.value = (
-            f"Cadena evaluada: '{w}'\n"
-            f"• Prefijos: {obtener_prefijos(w)}\n"
-            f"• Sufijos: {obtener_sufijos(w)}\n"
-            f"• Subcadenas distintas: {obtener_subcadenas(w)}"
-        )
         page.update()
 
     def op_concat_l(e):
         l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
         l2 = {x.strip() for x in txt_l2.value.split(",") if x.strip()}
-        txt_resultado.value = f"Concatenación (L1 · L2):\n{{u + v for u in l1 for v in l2}}"
+        res = sorted(list({u + v for u in l1 for v in l2}))
+        txt_resultado.value = f"Concatenar lenguajes: {res}"
+        page.update()
+
+    def op_potencia_l(e):
+        l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
+        k = int(txt_pot_l.value or 1)
+        res = l1.copy()
+        for _ in range(k - 1):
+            res = {u + v for u in res for v in l1}
+        txt_resultado.value = f"Potenciar lenguaje (L1^{k}): {sorted(list(res))}"
+        page.update()
+
+    def op_reflexion_l(e):
+        l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
+        res = sorted(list({w[::-1] for w in l1}))
+        txt_resultado.value = f"Reflexión del lenguaje (L1^R): {res}"
         page.update()
 
     def op_union_l(e):
         l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
         l2 = {x.strip() for x in txt_l2.value.split(",") if x.strip()}
-        txt_resultado.value = f"Unión (L1 ∪ L2):\n{l1.union(l2)}"
+        txt_resultado.value = f"Unión de lenguajes: {sorted(list(l1.union(l2)))}"
         page.update()
 
     def op_inter_l(e):
         l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
         l2 = {x.strip() for x in txt_l2.value.split(",") if x.strip()}
-        txt_resultado.value = f"Intersección (L1 ∩ L2):\n{l1.intersection(l2)}"
+        txt_resultado.value = f"Intersección de lenguajes: {sorted(list(l1.intersection(l2)))}"
         page.update()
 
     def op_dif_l(e):
         l1 = {x.strip() for x in txt_l1.value.split(",") if x.strip()}
         l2 = {x.strip() for x in txt_l2.value.split(",") if x.strip()}
-        txt_resultado.value = f"Diferencia (L1 - L2):\n{l1.difference(l2)}"
+        txt_resultado.value = f"Diferencia de lenguajes: {sorted(list(l1.difference(l2)))}"
         page.update()
 
-    def exportar_txt(e):
-        guardar_en_archivo(txt_resultado.value)
-
-    def validar_automata(e):
+    def validar_cadena_af(e):
         estado_actual = txt_est_init.value.strip()
-        estados_aceptacion = {x.strip() for x in txt_est_acept.value.split(",") if x.strip()}
+        aceptacion = {x.strip() for x in txt_est_acept.value.split(",") if x.strip()}
         cadena = txt_cad_validar.value.strip()
 
-        # Tabla simple de transiciones
-        transiciones = {
-            "0": {"a": "5", "b": "2", "c": "5"},
-            "4": {"a": "5", "b": "5", "c": "5"},
-            "5": {"a": "5", "b": "5", "c": "5"}
+        # Reconstruir mapa de transiciones desde las cajas
+        trans = {
+            "0": {"a": t0_a.value.strip(), "b": t0_b.value.strip(), "c": t0_c.value.strip()},
+            "4": {"a": t4_a.value.strip(), "b": t4_b.value.strip(), "c": t4_c.value.strip()},
+            "5": {"a": t5_a.value.strip(), "b": t5_b.value.strip(), "c": t5_c.value.strip()}
         }
 
-        historial = [f"Estado inicial: q{estado_actual}"]
-        for simbolo in cadena:
-            if estado_actual in transiciones and simbolo in transiciones[estado_actual]:
-                sig = transiciones[estado_actual][simbolo]
-                historial.append(f"δ(q{estado_actual}, '{simbolo}') → q{sig}")
-                estado_actual = sig
+        for sim in cadena:
+            if estado_actual in trans and sim in trans[estado_actual]:
+                estado_actual = trans[estado_actual][sim]
             else:
-                historial.append(f"δ(q{estado_actual}, '{simbolo}') → q5 (Pozo)")
                 estado_actual = "5"
 
-        es_valida = estado_actual in estados_aceptacion
-        res = f"=== EVALUACIÓN DE AUTÓMATA ===\nCadena: '{cadena}'\n"
-        res += "\n".join(historial) + "\n\n"
-        res += f"RESULTADO: {'¡CADENA ACEPTADA!' if es_valida else 'CADENA RECHAZADA (Estado final q' + estado_actual + ')'}"
-        
-        txt_resultado.value = res
+        valida = estado_actual in aceptacion
+        txt_resultado.value = f"Validación de Cadena '{cadena}': {'ACEPTADA (Llega a estado de aceptación)' if valida else 'RECHAZADA (Termina en estado ' + estado_actual + ')'}"
         page.update()
 
-    # --- LAYOUT EN COLUMNAS ---
-    col_entradas = ft.Column([
-        ft.Text("Entradas", size=18, weight=ft.FontWeight.BOLD),
-        txt_alfabeto, txt_nmax, txt_cadena_ind, txt_l1, txt_l2
-    ])
-
+    # --- BOTONES DEL CENTRO ---
     col_botones = ft.Column([
-        ft.Text("Operaciones", size=18, weight=ft.FontWeight.BOLD),
-        ft.ElevatedButton("Cerradura de Kleene", on_click=op_kleene, width=220),
-        ft.ElevatedButton("Clausura Positiva", on_click=op_positiva, width=220),
-        ft.ElevatedButton("Prefijos/Sufijos", on_click=op_subcadenas, width=220),
-        ft.ElevatedButton("Concatenar Lenguajes", on_click=op_concat_l, width=220),
-        ft.ElevatedButton("Unión de Lenguajes", on_click=op_union_l, width=220),
-        ft.ElevatedButton("Intersección", on_click=op_inter_l, width=220),
-        ft.ElevatedButton("Diferencia", on_click=op_dif_l, width=220),
-        ft.ElevatedButton("Exportar a TXT", on_click=exportar_txt, width=220)
-    ])
+        ft.ElevatedButton("Cerradura de Kleene", on_click=op_kleene, width=200),
+        ft.ElevatedButton("Clausura Positiva", on_click=op_positiva, width=200),
+        ft.ElevatedButton("Concatenar lenguajes", on_click=op_concat_l, width=200),
+        ft.ElevatedButton("Potenciar lenguaje", on_click=op_potencia_l, width=200),
+        ft.ElevatedButton("Reflexión del lenguaje", on_click=op_reflexion_l, width=200),
+        ft.ElevatedButton("Unión de lenguajes", on_click=op_union_l, width=200),
+        ft.ElevatedButton("Intersección de lenguajes", on_click=op_inter_l, width=200),
+        ft.ElevatedButton("Diferencia de lenguajes", on_click=op_dif_l, width=200),
+        ft.ElevatedButton("Definir Autómata", on_click=validar_cadena_af, width=200),
+    ], spacing=6, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
 
-    col_automata = ft.Column([
-        ft.Text("Autómata Finito", size=18, weight=ft.FontWeight.BOLD),
-        txt_estados, txt_est_init, txt_est_acept, txt_cad_validar,
-        ft.ElevatedButton("Validar Cadena en AF", on_click=validar_automata, width=220)
-    ])
+    col_izquierda = ft.Column([
+        txt_alfabeto, txt_nmax, txt_l1, txt_l2, txt_pot_l
+    ], spacing=10)
+
+    col_derecha = ft.Column([
+        txt_estados, txt_est_init, txt_est_acept,
+        ft.Text("Definir Transiciones", weight=ft.FontWeight.BOLD),
+        ft.Row([t0_a, t0_b, t0_c], spacing=5),
+        ft.Row([t4_a, t4_b, t4_c], spacing=5),
+        ft.Row([t5_a, t5_b, t5_c], spacing=5),
+        txt_cad_validar,
+        ft.Container(height=5),
+        ft.ElevatedButton("Validar Cadena", on_click=validar_cadena_af, width=200)
+    ], spacing=6)
 
     page.add(
-        ft.Text("Teoría de la Computación - Práctica 1", size=24, weight=ft.FontWeight.BOLD),
-        ft.Row([col_entradas, col_botones, col_automata], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.START),
+        ft.Row([col_izquierda, col_botones, col_derecha], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.START),
         ft.Divider(),
-        ft.Container(content=txt_resultado, padding=10, bgcolor="black", border_radius=5)
+        txt_resultado
     )
 
 ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=8550, host="0.0.0.0")
