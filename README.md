@@ -18,6 +18,7 @@ Estructura del Proyecto
 
 practica1-tc/
 ├── README.md
+
 ├── .gitignore
 ├── requirements.txt
 ├── pytest.ini
