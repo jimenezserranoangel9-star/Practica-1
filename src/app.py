@@ -8,7 +8,7 @@ from lenguajes import (
 def main(page: ft.Page):
     page.title = "Teoría de la Computación - Operaciones sobre Lenguajes"
     page.theme_mode = ft.ThemeMode.DARK
-    page.bgcolor = "#0D1117"  # Dark Mode Pro (estilo GitHub)
+    page.bgcolor = "#0D1117"  # Dark Mode estilo GitHub
     page.padding = 20
     page.scroll = ft.ScrollMode.AUTO
 
@@ -20,7 +20,7 @@ def main(page: ft.Page):
         except Exception as ex:
             page.open(ft.SnackBar(ft.Text(f" Error al guardar: {str(ex)}"), bgcolor="red"))
 
-    # --- TITULO PRINCIPAL ---
+    # --- ENCABEZADO ---
     header = ft.Container(
         content=ft.Column([
             ft.Row([
@@ -29,50 +29,38 @@ def main(page: ft.Page):
             ], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("Plataforma Interactiva para Operaciones de Cadenas, Lenguajes y Autómatas", size=13, color="#8B949E")
         ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        padding=15,
-        bgcolor="#161B22",
-        border_radius=12,
-        border=ft.border.all(1, "#30363D")
+        padding=15, bgcolor="#161B22", border_radius=12, border=ft.border.all(1, "#30363D")
     )
 
-    # --- ENTRADAS (COLUMNA IZQUIERDA) ---
+    # --- COLUMNA IZQUIERDA: ENTRADAS DE CADENAS Y LENGUAJES ---
     txt_alfabeto = ft.TextField(label="Alfabeto Σ (ej: a,b,c)", value="a,b,c", border_color="#30363D", focused_border_color="#58A6FF")
     txt_nmax = ft.TextField(label="Máx. Combinaciones (n)", value="3", border_color="#30363D", focused_border_color="#58A6FF")
     txt_cadena_ind = ft.TextField(label="Cadena Individual (w)", value="hola", border_color="#30363D", focused_border_color="#58A6FF")
     txt_l1 = ft.TextField(label="Lenguaje 1 (L1)", value="ba,aaaaaaaaa,baa,b,ccc,aa", border_color="#30363D", focused_border_color="#58A6FF")
     txt_l2 = ft.TextField(label="Lenguaje 2 (L2)", value="aa,bababa,aaa,baaa,ccc,aaaaababa,bbbbbb", border_color="#30363D", focused_border_color="#58A6FF")
-    txt_pot_l = ft.TextField(label="Potencia (n)", value="3", border_color="#30363D", focused_border_color="#58A6FF")
 
     card_entradas = ft.Container(
         content=ft.Column([
             ft.Row([ft.Icon(ft.Icons.INPUT, color="#58A6FF"), ft.Text("Entradas de Datos", size=16, weight=ft.FontWeight.BOLD, color="#F0F6FC")]),
             ft.Divider(color="#30363D"),
-            txt_alfabeto, txt_nmax, txt_cadena_ind, txt_l1, txt_l2, txt_pot_l
+            txt_alfabeto, txt_nmax, txt_cadena_ind, txt_l1, txt_l2
         ], spacing=10),
-        padding=15,
-        bgcolor="#161B22",
-        border_radius=12,
-        border=ft.border.all(1, "#30363D"),
-        expand=True
+        padding=15, bgcolor="#161B22", border_radius=12, border=ft.border.all(1, "#30363D"), expand=True
     )
 
-    # --- RESULTADOS ABAJO ---
+    # --- SALIDA DE RESULTADOS ABAJO ---
     txt_resultado = ft.Text(value="Los resultados aparecerán aquí al presionar un botón...", size=14, color="#A3E635", selectable=True)
     
     box_resultado = ft.Container(
         content=ft.Column([
-            ft.Row([ft.Icon(ft.Icons.ANALYTICS, color="#A3E635"), ft.Text("Salida de Operaciones", size=15, weight=ft.FontWeight.BOLD, color="#F0F6FC")]),
+            ft.Row([ft.Icon(ft.Icons.ANALYTICS, color="#A3E635"), ft.Text("Salida de Operaciones / Evaluación", size=15, weight=ft.FontWeight.BOLD, color="#F0F6FC")]),
             ft.Divider(color="#30363D"),
             txt_resultado
         ]),
-        padding=15,
-        bgcolor="#0D1117",
-        border_radius=12,
-        border=ft.border.all(1, "#A3E635"),
-        margin=ft.margin.only(top=15)
+        padding=15, bgcolor="#0D1117", border_radius=12, border=ft.border.all(1, "#A3E635"), margin=ft.margin.only(top=15)
     )
 
-    # --- OPERACIONES ---
+    # --- FUNCIONES DE OPERACIONES SOBRE LENGUAJES ---
     def op_kleene(e):
         alf = {x.strip() for x in txt_alfabeto.value.split(",") if x.strip()}
         try:
@@ -129,17 +117,12 @@ def main(page: ft.Page):
     def exportar_txt(e):
         guardar_en_archivo(txt_resultado.value)
 
-    # --- BOTONES (COLUMNA CENTRO) ---
-    def btn_estilo(texto, icono, funcion, color="#238636"):
+    # --- COLUMNA CENTRO: BOTONES DE ACCIÓN ---
+    def btn_estilo(texto, icono, funcion, color="#2563EB"):
         return ft.ElevatedButton(
             content=ft.Row([ft.Icon(icono, size=18), ft.Text(texto, weight=ft.FontWeight.BOLD)], alignment=ft.MainAxisAlignment.CENTER),
             on_click=funcion,
-            style=ft.ButtonStyle(
-                color="#FFFFFF",
-                bgcolor=color,
-                shape=ft.RoundedRectangleBorder(radius=8),
-                padding=12
-            ),
+            style=ft.ButtonStyle(color="#FFFFFF", bgcolor=color, shape=ft.RoundedRectangleBorder(radius=8), padding=12),
             width=260
         )
 
@@ -157,41 +140,73 @@ def main(page: ft.Page):
             ft.Divider(color="#30363D"),
             btn_estilo("Exportar a TXT", ft.Icons.DOWNLOAD, exportar_txt, "#D97706")
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=8),
-        padding=15,
-        bgcolor="#161B22",
-        border_radius=12,
-        border=ft.border.all(1, "#30363D"),
-        expand=True
+        padding=15, bgcolor="#161B22", border_radius=12, border=ft.border.all(1, "#30363D"), expand=True
     )
 
-    # --- AUTOMATAS (COLUMNA DERECHA) ---
-    txt_estados = ft.TextField(label="Estados (ej: 0,1,2)", value="0,1,2,3,4,5", border_color="#30363D")
+    # --- COLUMNA DERECHA: EVALUADOR DE AUTÓMATA FINITO ---
+    txt_estados = ft.TextField(label="Estados (ej: 0,1,2,3,4,5)", value="0,1,2,3,4,5", border_color="#30363D")
     txt_est_init = ft.TextField(label="Estado Inicial", value="0", border_color="#30363D")
-    txt_est_acept = ft.TextField(label="Estados Aceptación", value="4", border_color="#30363D")
+    txt_est_acept = ft.TextField(label="Estados Aceptación (ej: 4)", value="4", border_color="#30363D")
     txt_cad_validar = ft.TextField(label="Cadena a Validar", value="abbbacbcbcbcba", border_color="#30363D")
+
+    # Matriz de Transiciones por defecto (Estilo Anexo 1 del profesor)
+    transiciones = {
+        "0": {"a": "5", "b": "2", "c": "5"},
+        "4": {"a": "5", "b": "5", "c": "5"},
+        "5": {"a": "5", "b": "5", "c": "5"}
+    }
+
+    def validar_automata(e):
+        estado_actual = txt_est_init.value.strip()
+        estados_aceptacion = {x.strip() for x in txt_est_acept.value.split(",") if x.strip()}
+        cadena = txt_cad_validar.value.strip()
+
+        historial = [f"Estado inicial: q{estado_actual}"]
+        
+        # Simulación del paso a paso por los estados
+        error = False
+        for simbolo in cadena:
+            if estado_actual in transiciones and simbolo in transiciones[estado_actual]:
+                siguiente_estado = transiciones[estado_actual][simbolo]
+                historial.append(f"δ(q{estado_actual}, '{simbolo}') → q{siguiente_estado}")
+                estado_actual = siguiente_estado
+            else:
+                # Si no hay transición explícita, por defecto va a pozo (5) o se rechaza
+                historial.append(f"δ(q{estado_actual}, '{simbolo}') → Tránsito no definido (Rechazada)")
+                error = True
+                break
+
+        es_aceptada = (estado_actual in estados_aceptacion) and not error
+
+        res_texto = f"=== EVALUACIÓN DE AUTÓMATA FINITO ===\n"
+        res_texto += f"Cadena evaluada: '{cadena}'\n"
+        res_texto += "Recorrido de transiciones:\n  " + "\n  ".join(historial) + "\n\n"
+        
+        if es_aceptada:
+            res_texto += f" RESULTADO: ¡CADENA ACEPTADA! El estado final q{estado_actual} es de aceptación."
+        else:
+            res_texto += f" RESULTADO: CADENA RECHAZADA. El estado final q{estado_actual} NO es un estado de aceptación ({estados_aceptacion})."
+
+        txt_resultado.value = res_texto
+        page.update()
 
     card_automata = ft.Container(
         content=ft.Column([
             ft.Row([ft.Icon(ft.Icons.ACCOUNT_TREE, color="#EC4899"), ft.Text("Definición de Autómata", size=16, weight=ft.FontWeight.BOLD, color="#F0F6FC")]),
             ft.Divider(color="#30363D"),
             txt_estados, txt_est_init, txt_est_acept,
-            ft.Text("Transiciones Activas:", size=13, weight=ft.FontWeight.BOLD, color="#8B949E"),
+            ft.Text("Transiciones Registradas:", size=13, weight=ft.FontWeight.BOLD, color="#8B949E"),
             ft.Container(
                 content=ft.Column([
                     ft.Text("• 0: a → 5 | b → 2 | c → 5", size=12, color="#C9D1D9"),
                     ft.Text("• 4: a → 5 | b → 5 | c → 5", size=12, color="#C9D1D9"),
                     ft.Text("• 5: a → 5 | b → 5 | c → 5", size=12, color="#C9D1D9")
-                ]),
-                padding=10, bgcolor="#0D1117", border_radius=6
+                ]), padding=10, bgcolor="#0D1117", border_radius=6
             ),
             txt_cad_validar,
-            ft.ElevatedButton("Validar Cadena en AF", icon=ft.Icons.PLAY_ARROW, style=ft.ButtonStyle(bgcolor="#EC4899", color="white"), width=280)
+            ft.ElevatedButton("Validar Cadena en AF", icon=ft.Icons.PLAY_ARROW, on_click=validar_automata, style=ft.ButtonStyle(bgcolor="#EC4899", color="white"), width=280)
         ], spacing=10),
-        padding=15,
-        bgcolor="#161B22",
-        border_radius=12,
-        border=ft.border.all(1, "#30363D"),
-        expand=True
+        padding=15, bgcolor="#161B22", border_radius=12, border=ft.border.all(1, "#30363D"), expand=True
     )
 
     # Layout de 3 Columnas
