@@ -1,0 +1,24 @@
+services:
+  py311:
+    build:
+      context: .
+      args:
+        PYTHON_VERSION: "3.11"
+    image: practica1-py311:latest
+    container_name: service_py311
+
+  py312:
+    build:
+      context: .
+      args:
+        PYTHON_VERSION: "3.12"
+    image: practica1-py312:latest
+    container_name: service_py312
+
+  py313:
+    build:
+      context: .
+      args:
+        PYTHON_VERSION: "3.13"
+    image: practica1-py313:latest
+    container_name: service_py313
