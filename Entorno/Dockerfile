@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Las dependencias antes que el codigo, para reutilizar la capa
 # mientras requirements.txt no cambie.
-COPY entorno/requirements.txt .
+COPY Entorno/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
