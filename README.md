@@ -1,1 +1,59 @@
-    Justificación de la elección de las versiones de PythonPara la arquitectura del entorno Docker se seleccionaron tres versiones de Python en su variante slim (python:3.11-slim, python:3.12-slim y python:3.13-slim). La elección de cada versión responde a criterios específicos de compatibilidad de dependencias, referencia del curso y validación de cambios en la sintaxis e intérprete:   python:3.11-slim (Servicio py311):Justificación: Es la versión mínima compatible que garantiza soporte estable y libre de errores de compilación al empaquetar y publicar aplicaciones con el framework Flet (v0.28.2).Cita / Fuente: Documentación oficial de requisitos de compatibilidad de Flet (flet.dev/docs). Asimismo, cuenta con soporte activo oficial por parte de la Python Software Foundation hasta octubre de 2027.python:3.12-slim (Servicio py312):Justificación: Corresponde a la versión estándar y de referencia establecida para el desarrollo de las prácticas del curso. Es el entorno base donde se ejecuta y sirve la interfaz gráfica de la aplicación.Cita / Fuente: Lineamientos y especificaciones técnicas de la práctica del curso. Cuenta con fin de soporte (End-of-Life) programado para octubre de 2028 (devguide.python.org/versions/).python:3.13-slim (Servicio py313):Justificación: Se incluye como entorno de pruebas con una versión reciente del intérprete para verificar la retrocompatibilidad del código y asegurar que la aplicación no dependa de comportamientos obsoletos o eliminados en revisiones modernas.Cita / Fuente: Calendario de lanzamientos y mantenimiento de la Python Software Foundation (devguide.python.org/versions/), con soporte activo programado hasta octubre de 2029.
+Práctica 1: Entorno Multicontenedor y Control de Versiones
+
+Descripción General
+
+Este repositorio contiene la configuración del entorno de desarrollo multicontenedor utilizando Docker y Docker Compose, enfocado en el despliegue de aplicaciones desarrolladas en Python.
+
+Justificación de la Elección de Versiones de Python
+
+Para la arquitectura del entorno Docker se seleccionaron tres versiones específicas del lenguaje Python:
+
+Python 3.11: Garantiza compatibilidad retroactiva y estabilidad con librerías legacy e infraestructuras de producción previas.
+
+Python 3.12: Se establece como la versión base estandarizada para el desarrollo del proyecto por su equilibrio entre rendimiento y madurez en el ecosistema.
+
+Python 3.13: Utilizada para pruebas de vanguardia, validando características recientes y evaluando el rendimiento en versiones modernas del intérprete.
+
+Estructura del Proyecto
+
+practica1-tc/
+├── README.md
+├── .gitignore
+├── requirements.txt
+├── pytest.ini
+├── docs/
+│   ├── 01-entorno.md
+│   ├── 02-investigacion.md
+│   ├── 03-estado-del-arte.md
+│   ├── 04-jflap.md
+│   ├── 05-aplicacion.md
+│   ├── conclusiones.md
+│   └── bibliografia.md
+├── entorno/
+│   ├── Dockerfile
+│   ├── compose.yml
+│   └── requirements.txt
+├── automatas/
+├── src/
+│   ├── lenguajes.py
+│   └── app.py
+├── tests/
+│   └── test_lenguajes.py
+└── evidencias/
+    ├── git/
+    ├── docker/
+    ├── jflap/
+    └── app/
+
+
+Uso del Entorno
+
+Para levantar los servicios y verificar las versiones en cada contenedor, ejecuta los siguientes comandos dentro del directorio entorno/:
+
+# Verificación de versiones de Python
+docker compose run --rm py311 python --version
+docker compose run --rm py312 python --version
+docker compose run --rm py313 python --version
+
+# Levantar servidor web Flet en puerto 8550
+docker compose up
