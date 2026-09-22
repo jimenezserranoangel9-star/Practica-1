@@ -49,9 +49,10 @@ def generar_cerradura_positiva(alfabeto: set[str], n_max: int) -> list[str]:
     return [w for w in kleene if w != ""]
 ```  
 ### 1.2 Capturas de la interfaz y su funcionamiento
- ![Git Log Graph](../evidencias/app/Imagen9.png)
- ![Git Log Graph](../evidencias/app/Imagen9.png)
- ![Git Log Graph](../evidencias/app/Imagen9.png)
+ ![Git Log Graph](../evidencias/app/Imagen10.png)
+ ![Git Log Graph](../evidencias/app/Imagen11.png)
+ ![Git Log Graph](../evidencias/app/Imagen12.png)
+ ![Git Log Graph](../evidencias/app/Imagen13.png)
 ## 2. Salidas de la Suite de Pruebas (PyTest)
 
 ### 2.1 Salida Python 3.11 (`py311`), Python 3.12 (`py312`) y Python 3.13 (`py313`).
