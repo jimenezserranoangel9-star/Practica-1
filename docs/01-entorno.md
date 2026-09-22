@@ -82,12 +82,12 @@ Fijar la versión como `python:3.12-slim` en lugar de `python:latest` garantiza 
 
 ### Evidencia de `git log`
 Visualización del árbol de historial y fusiones de ramas:
-![Git Log Graph](practica-1/evidencias/Imagen6.png)
+![Git Log Graph](../evidencias/Imagen6.png)
 
 ### Evidencia del Pull Request Fusionado
 Captura del PR en GitHub con la cinta indicadora de estado **Merged**:
-![Pull Request Merged](practica-1/evidencias/Imagen7.png)
+![Pull Request Merged](../evidencias/Imagen7.png)
 
 ### Evidencia de Entorno Multicontenedor (Docker)
 Ejecución de verificación de versión para Python 3.11, 3.12 y 3.13 sobre contenedores Docker:
-![Docker Python Versions](practica-1/evidencias/Imagen8.png)
+![Docker Python Versions](../evidencias/Imagen8.png)
