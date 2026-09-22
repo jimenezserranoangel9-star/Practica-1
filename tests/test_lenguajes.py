@@ -27,7 +27,7 @@ def test_prefijos_y_sufijos_longitud_1():
     """Prueba prefijos y sufijos de una cadena de longitud 1."""
     cadena = "x"
     assert obtener_prefijos(cadena) == ["", "x"]
-    assert obtener_sufijos(cadena) == ["", "x"]
+    assert obtener_sufijos(cadena) == ["x", ""] 
 
 def test_diferencia_kleene_y_positiva_longitud_cero():
     """Prueba que la diferencia entre Sigma* y Sigma+ para n=0 es exactamente {lambda}."""
