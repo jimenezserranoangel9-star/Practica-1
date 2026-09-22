@@ -1,35 +1,38 @@
 # src/lenguajes.py
+import itertools
 
-def concatenar_cadenas(u: str, v: str) -> str:
-    return u + v
+def obtener_prefijos(cadena: str) -> list[str]:
+    """Calcula todos los prefijos de una cadena, incluyendo la cadena vacía."""
+    return [cadena[:i] for i in range(len(cadena) + 1)]
 
-def potencia_cadena(u: str, n: int) -> str:
-    if n < 0:
-        raise ValueError("La potencia debe ser un entero no negativo.")
-    return u * n
+def obtener_sufijos(cadena: str) -> list[str]:
+    """Calcula todos los sufijos de una cadena, incluyendo la cadena vacía."""
+    return [cadena[i:] for i in range(len(cadena) + 1)]
 
-def inversion_cadena(u: str) -> str:
-    return u[::-1]
+def obtener_subcadenas(cadena: str) -> list[str]:
+    """Calcula todas las subcadenas distintas de una cadena."""
+    subcadenas = {""}
+    n = len(cadena)
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            subcadenas.add(cadena[i:j])
+    return sorted(list(subcadenas), key=lambda x: (len(x), x))
 
-def longitud_cadena(u: str) -> int:
-    return len(u)
+def generar_cerradura_kleene(alfabeto: set[str], n_max: int) -> list[str]:
+    """Genera la cerradura de Kleene (Sigma*) hasta la longitud n_max."""
+    # Validación del límite de 200,000 cadenas (Operación 2)
+    k = len(alfabeto)
+    total_estimado = sum(k**i for i in range(n_max + 1)) if k > 0 else 1
+    if total_estimado > 200000:
+        raise ValueError(f"Rechazado: La combinación de |Σ|={k} y n={n_max} generaría {total_estimado:,} cadenas (Límite: 200,000).")
 
-def concatenar_lenguajes(L1: set, L2: set) -> set:
-    return {u + v for u in L1 for v in L2}
+    cadenas = []
+    for i in range(n_max + 1):
+        for p in itertools.product(sorted(list(alfabeto)), repeat=i):
+            cadenas.append("".join(p))
+    return cadenas
 
-def union_lenguajes(L1: set, L2: set) -> set:
-    return L1.union(L2)
-
-def interseccion_lenguajes(L1: set, L2: set) -> set:
-    return L1.intersection(L2)
-
-def diferencia_lenguajes(L1: set, L2: set) -> set:
-    return L1.difference(L2)
-
-def potencia_lenguaje(L: set, n: int) -> set:
-    if n == 0:
-        return {""}
-    resultado = L.copy()
-    for _ in range(n - 1):
-        resultado = concatenar_lenguajes(resultado, L)
-    return resultado
+def generar_cerradura_positiva(alfabeto: set[str], n_max: int) -> list[str]:
+    """Genera la cerradura positiva (Sigma+) hasta la longitud n_max."""
+    cadenas_kleene = generar_cerradura_kleene(alfabeto, n_max)
+    return [w for w in cadenas_kleene if w != ""]
